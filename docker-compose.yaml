@@ -1,15 +1,13 @@
-version: "3.8"
-
 services:
   db:
     image: postgres:16
     container_name: demo_1_db
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres123
-      - POSTGRES_DB=devops_docker_demo_1
+      - POSTGRES_USER=${POSTGRES_USER}  # Use variables from .env
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     restart: unless-stopped
@@ -38,6 +36,6 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
-
+    
 volumes:
   db_data:
