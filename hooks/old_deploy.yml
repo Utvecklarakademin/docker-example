@@ -21,22 +21,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Set version tags
-        id: vars
-        run: |
-          DATE=$(date +%Y%m%d)
-          SHORT_SHA=${{ github.sha }}
-          echo "api_version=${DATE}-${SHORT_SHA:0:7}" >> $GITHUB_ENV
-          echo "frontend_version=${DATE}-${SHORT_SHA:0:7}" >> $GITHUB_ENV
-
       - name: Build and push API image
         uses: docker/build-push-action@v5
         with:
           context: ./api
           push: true
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/docker-test-api:${{ env.api_version }}
-            ${{ secrets.DOCKER_USERNAME }}/docker-test-api:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/docker-test-api:latest
           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/docker-test-api:latest
           cache-to: type=inline
 
@@ -45,9 +35,7 @@ jobs:
         with:
           context: ./frontend
           push: true
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/docker-test-frontend:${{ env.frontend_version }}
-            ${{ secrets.DOCKER_USERNAME }}/docker-test-frontend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/docker-test-frontend:latest
           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/docker-test-frontend:latest
           cache-to: type=inline
 
@@ -68,16 +56,12 @@ jobs:
               sudo cp .env.example .env
             fi
 
-            # Update docker-compose.yml with new tags
-            sed -i "s|image: .*/docker-test-api:.*|image: ${{ secrets.DOCKER_USERNAME }}/docker-test-api:${{ env.api_version }}|" docker-compose.yml
-            sed -i "s|image: .*/docker-test-frontend:.*|image: ${{ secrets.DOCKER_USERNAME }}/docker-test-frontend:${{ env.frontend_version }}|" docker-compose.yml
-
             # Pull latest images
             sudo docker compose pull
 
             # Restart services
             sudo docker compose down
-            sudo docker compose up -d --build
+            sudo docker compose up -d --build -d
 
             # Clean up old images
             sudo docker image prune -f
