@@ -23,7 +23,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Frontend origin
+    allow_origins=["http://localhost:3000"],  # Frontend origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -65,7 +65,7 @@ error_logger.info("API is starting up")
 # This is an endpoint, it doesn't do anything special, but it's an endpoint
 @app.get("/status")
 def get_status():
-    return {"message": "Hello world"}
+    return {"message": "Hello world 2"}
 
 
 # list endpoints
