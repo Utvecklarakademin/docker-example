@@ -4,7 +4,7 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 
-load_dotenv(override=True)
+load_dotenv()
 
 DATABASE_NAME = os.getenv("DATABASE")
 PASSWORD = os.getenv("PASSWORD")
