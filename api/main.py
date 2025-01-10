@@ -65,7 +65,7 @@ error_logger.info("API is starting up")
 # This is an endpoint, it doesn't do anything special, but it's an endpoint
 @app.get("/status")
 def get_status():
-    return {"message": "Hello world 2"}
+    return {"message": "Hello world 3"}
 
 
 # list endpoints
